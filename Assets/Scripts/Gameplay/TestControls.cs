@@ -25,12 +25,12 @@ public class TestControls : MonoBehaviour
 
         if (Input.GetKey(KeyCode.A))
         {
-            transform.Rotate(0.0f, -1.0f, 0.0f);
+            transform.Rotate(0.0f, -3.0f, 0.0f);
         }
 
         if (Input.GetKey(KeyCode.D))
         {
-            transform.Rotate(0.0f, 1.0f, 0.0f);
+            transform.Rotate(0.0f, 3.0f, 0.0f);
         }
     }
 }
