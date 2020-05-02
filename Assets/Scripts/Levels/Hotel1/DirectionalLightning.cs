@@ -7,7 +7,7 @@ public class DirectionalLightning : MonoBehaviour
     [SerializeField]
     bool toggleCameraBackground = true;
     [SerializeField]
-    float lightningRange = 10.0f;
+    float lightningRange = 8.0f;
     [SerializeField]
     Color lightningColor = Color.white;
     [SerializeField]
