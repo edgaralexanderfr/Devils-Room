@@ -442,9 +442,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   cameraRotator: {fileID: 1986629182}
-  cameraSpeed: 20
+  cameraSpeed: 10
+  cameraXInversion: 1
+  cameraYInversion: 1
   cameraMinXRotation: 300
   cameraMaxXRotation: 60
+  rotationSpeed: 12
+  walkSpeed: 3
 --- !u!1 &1878592524
 GameObject:
   m_ObjectHideFlags: 0
