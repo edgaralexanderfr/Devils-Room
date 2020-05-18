@@ -1,7 +1,12 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
+/**
+ * TODO: - Organise and refactorise controls and messed stuff...
+ *       - Also remember to add mouse controls to the Input System...
+ */
 public class Controls : MonoBehaviour
 {
     // Script settings
@@ -27,6 +32,42 @@ public class Controls : MonoBehaviour
     // Private properties
     Animator _animator;
     bool _playingWalkAnimation = false;
+    PlayerControls _playerControls;
+
+    float _playerControlsMoveUp = 0.0f;
+    float _playerControlsMoveDown = 0.0f;
+    float _playerControlsMoveLeft = 0.0f;
+    float _playerControlsMoveRight = 0.0f;
+
+    float _playerControlsLookUp = 0.0f;
+    float _playerControlsLookDown = 0.0f;
+    float _playerControlsLookLeft = 0.0f;
+    float _playerControlsLookRight = 0.0f;
+
+    void Awake()
+    {
+        _playerControls = new PlayerControls();
+
+        _playerControls.Gameplay.MoveUp.performed += ctx => _playerControlsMoveUp = ctx.ReadValue<float>();
+        _playerControls.Gameplay.MoveDown.performed += ctx => _playerControlsMoveDown = ctx.ReadValue<float>();
+        _playerControls.Gameplay.MoveLeft.performed += ctx => _playerControlsMoveLeft = ctx.ReadValue<float>();
+        _playerControls.Gameplay.MoveRight.performed += ctx => _playerControlsMoveRight = ctx.ReadValue<float>();
+
+        _playerControls.Gameplay.LookUp.performed += ctx => _playerControlsLookUp = ctx.ReadValue<float>();
+        _playerControls.Gameplay.LookDown.performed += ctx => _playerControlsLookDown = ctx.ReadValue<float>();
+        _playerControls.Gameplay.LookLeft.performed += ctx => _playerControlsLookLeft = ctx.ReadValue<float>();
+        _playerControls.Gameplay.LookRight.performed += ctx => _playerControlsLookRight = ctx.ReadValue<float>();
+
+        _playerControls.Gameplay.MoveUp.canceled += ctx => _playerControlsMoveUp = 0.0f;
+        _playerControls.Gameplay.MoveDown.canceled += ctx => _playerControlsMoveDown = 0.0f;
+        _playerControls.Gameplay.MoveLeft.canceled += ctx => _playerControlsMoveLeft = 0.0f;
+        _playerControls.Gameplay.MoveRight.canceled += ctx => _playerControlsMoveRight = 0.0f;
+
+        _playerControls.Gameplay.LookUp.canceled += ctx => _playerControlsLookUp = 0.0f;
+        _playerControls.Gameplay.LookDown.canceled += ctx => _playerControlsLookDown = 0.0f;
+        _playerControls.Gameplay.LookLeft.canceled += ctx => _playerControlsLookLeft = 0.0f;
+        _playerControls.Gameplay.LookRight.canceled += ctx => _playerControlsLookRight = 0.0f;
+    }
 
     // Start is called before the first frame update
     void Start()
@@ -47,24 +88,34 @@ public class Controls : MonoBehaviour
         UpdateRotatorPosition();
     }
 
+    void OnEnable()
+    {
+        _playerControls.Gameplay.Enable();
+    }
+
+    void OnDisabled()
+    {
+        _playerControls.Gameplay.Disable();
+    }
+
     void UpdateControls()
     {
-        if (Input.GetKey(KeyCode.W))
+        if (_playerControlsMoveUp > 0.5f)
         {
             MoveAlong(0.0f);
         }
 
-        if (Input.GetKey(KeyCode.S))
+        if (_playerControlsMoveDown > 0.5f)
         {
             MoveAlong(-180.0f);
         }
 
-        if (Input.GetKey(KeyCode.A))
+        if (_playerControlsMoveLeft > 0.5f)
         {
             MoveAlong(270.0f);
         }
 
-        if (Input.GetKey(KeyCode.D))
+        if (_playerControlsMoveRight > 0.5f)
         {
             MoveAlong(90.0f);
         }
@@ -72,7 +123,7 @@ public class Controls : MonoBehaviour
 
     void UpdateAnimations()
     {
-        if (Input.GetKey(KeyCode.W) || Input.GetKey(KeyCode.S) || Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.D))
+        if (_playerControlsMoveUp > 0.5f || _playerControlsMoveDown > 0.5f || _playerControlsMoveLeft > 0.5f || _playerControlsMoveRight > 0.5f)
         {
             if (!_playingWalkAnimation)
             {
@@ -104,8 +155,8 @@ public class Controls : MonoBehaviour
 
     void UpdateCameraRotation()
     {
-        float inputMouseX = Input.GetAxis("Mouse X") * cameraXInversion;
-        float inputMouseY = Input.GetAxis("Mouse Y") * cameraYInversion;
+        float inputMouseX = (_playerControlsLookLeft - _playerControlsLookRight) * cameraXInversion;
+        float inputMouseY = (_playerControlsLookUp - _playerControlsLookDown) * cameraYInversion;
 
         if (inputMouseX != 0.0f)
         {
