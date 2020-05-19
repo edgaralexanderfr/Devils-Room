@@ -29,44 +29,71 @@ public class Controls : MonoBehaviour
     [SerializeField]
     float walkSpeed = 3.0f;
 
+    struct PlayerControlsValues {
+        public float MoveUp;
+        public float MoveDown;
+        public float MoveLeft;
+        public float MoveRight;
+
+        public float LookUp;
+        public float LookDown;
+        public float LookLeft;
+        public float LookRight;
+
+        public PlayerControlsValues(
+            float moveUp = 0.0f,
+            float moveDown = 0.0f,
+            float moveLeft = 0.0f,
+            float moveRight = 0.0f,
+
+            float lookUp = 0.0f,
+            float lookDown = 0.0f,
+            float lookLeft = 0.0f,
+            float lookRight = 0.0f
+        )
+        {
+            MoveUp = moveUp;
+            MoveDown = moveDown;
+            MoveLeft = moveLeft;
+            MoveRight = moveRight;
+
+            LookUp = lookUp;
+            LookDown = lookDown;
+            LookLeft = lookLeft;
+            LookRight = lookRight;
+        }
+    }
+
     // Private properties
     Animator _animator;
     bool _playingWalkAnimation = false;
     PlayerControls _playerControls;
-
-    float _playerControlsMoveUp = 0.0f;
-    float _playerControlsMoveDown = 0.0f;
-    float _playerControlsMoveLeft = 0.0f;
-    float _playerControlsMoveRight = 0.0f;
-
-    float _playerControlsLookUp = 0.0f;
-    float _playerControlsLookDown = 0.0f;
-    float _playerControlsLookLeft = 0.0f;
-    float _playerControlsLookRight = 0.0f;
+    PlayerControlsValues _playerControlsValues;
 
     void Awake()
     {
         _playerControls = new PlayerControls();
+        _playerControlsValues = new PlayerControlsValues();
 
-        _playerControls.Gameplay.MoveUp.performed += ctx => _playerControlsMoveUp = ctx.ReadValue<float>();
-        _playerControls.Gameplay.MoveDown.performed += ctx => _playerControlsMoveDown = ctx.ReadValue<float>();
-        _playerControls.Gameplay.MoveLeft.performed += ctx => _playerControlsMoveLeft = ctx.ReadValue<float>();
-        _playerControls.Gameplay.MoveRight.performed += ctx => _playerControlsMoveRight = ctx.ReadValue<float>();
+        _playerControls.Gameplay.MoveUp.performed += ctx => _playerControlsValues.MoveUp = ctx.ReadValue<float>();
+        _playerControls.Gameplay.MoveDown.performed += ctx => _playerControlsValues.MoveDown = ctx.ReadValue<float>();
+        _playerControls.Gameplay.MoveLeft.performed += ctx => _playerControlsValues.MoveLeft = ctx.ReadValue<float>();
+        _playerControls.Gameplay.MoveRight.performed += ctx => _playerControlsValues.MoveRight = ctx.ReadValue<float>();
 
-        _playerControls.Gameplay.LookUp.performed += ctx => _playerControlsLookUp = ctx.ReadValue<float>();
-        _playerControls.Gameplay.LookDown.performed += ctx => _playerControlsLookDown = ctx.ReadValue<float>();
-        _playerControls.Gameplay.LookLeft.performed += ctx => _playerControlsLookLeft = ctx.ReadValue<float>();
-        _playerControls.Gameplay.LookRight.performed += ctx => _playerControlsLookRight = ctx.ReadValue<float>();
+        _playerControls.Gameplay.LookUp.performed += ctx => _playerControlsValues.LookUp = ctx.ReadValue<float>();
+        _playerControls.Gameplay.LookDown.performed += ctx => _playerControlsValues.LookDown = ctx.ReadValue<float>();
+        _playerControls.Gameplay.LookLeft.performed += ctx => _playerControlsValues.LookLeft = ctx.ReadValue<float>();
+        _playerControls.Gameplay.LookRight.performed += ctx => _playerControlsValues.LookRight = ctx.ReadValue<float>();
 
-        _playerControls.Gameplay.MoveUp.canceled += ctx => _playerControlsMoveUp = 0.0f;
-        _playerControls.Gameplay.MoveDown.canceled += ctx => _playerControlsMoveDown = 0.0f;
-        _playerControls.Gameplay.MoveLeft.canceled += ctx => _playerControlsMoveLeft = 0.0f;
-        _playerControls.Gameplay.MoveRight.canceled += ctx => _playerControlsMoveRight = 0.0f;
+        _playerControls.Gameplay.MoveUp.canceled += ctx => _playerControlsValues.MoveUp = 0.0f;
+        _playerControls.Gameplay.MoveDown.canceled += ctx => _playerControlsValues.MoveDown = 0.0f;
+        _playerControls.Gameplay.MoveLeft.canceled += ctx => _playerControlsValues.MoveLeft = 0.0f;
+        _playerControls.Gameplay.MoveRight.canceled += ctx => _playerControlsValues.MoveRight = 0.0f;
 
-        _playerControls.Gameplay.LookUp.canceled += ctx => _playerControlsLookUp = 0.0f;
-        _playerControls.Gameplay.LookDown.canceled += ctx => _playerControlsLookDown = 0.0f;
-        _playerControls.Gameplay.LookLeft.canceled += ctx => _playerControlsLookLeft = 0.0f;
-        _playerControls.Gameplay.LookRight.canceled += ctx => _playerControlsLookRight = 0.0f;
+        _playerControls.Gameplay.LookUp.canceled += ctx => _playerControlsValues.LookUp = 0.0f;
+        _playerControls.Gameplay.LookDown.canceled += ctx => _playerControlsValues.LookDown = 0.0f;
+        _playerControls.Gameplay.LookLeft.canceled += ctx => _playerControlsValues.LookLeft = 0.0f;
+        _playerControls.Gameplay.LookRight.canceled += ctx => _playerControlsValues.LookRight = 0.0f;
     }
 
     // Start is called before the first frame update
@@ -100,22 +127,22 @@ public class Controls : MonoBehaviour
 
     void UpdateControls()
     {
-        if (_playerControlsMoveUp > 0.5f)
+        if (_playerControlsValues.MoveUp > 0.5f)
         {
             MoveAlong(0.0f);
         }
 
-        if (_playerControlsMoveDown > 0.5f)
+        if (_playerControlsValues.MoveDown > 0.5f)
         {
             MoveAlong(-180.0f);
         }
 
-        if (_playerControlsMoveLeft > 0.5f)
+        if (_playerControlsValues.MoveLeft > 0.5f)
         {
             MoveAlong(270.0f);
         }
 
-        if (_playerControlsMoveRight > 0.5f)
+        if (_playerControlsValues.MoveRight > 0.5f)
         {
             MoveAlong(90.0f);
         }
@@ -123,7 +150,7 @@ public class Controls : MonoBehaviour
 
     void UpdateAnimations()
     {
-        if (_playerControlsMoveUp > 0.5f || _playerControlsMoveDown > 0.5f || _playerControlsMoveLeft > 0.5f || _playerControlsMoveRight > 0.5f)
+        if (_playerControlsValues.MoveUp > 0.5f || _playerControlsValues.MoveDown > 0.5f || _playerControlsValues.MoveLeft > 0.5f || _playerControlsValues.MoveRight > 0.5f)
         {
             if (!_playingWalkAnimation)
             {
@@ -155,8 +182,8 @@ public class Controls : MonoBehaviour
 
     void UpdateCameraRotation()
     {
-        float inputMouseX = (_playerControlsLookLeft - _playerControlsLookRight) * cameraXInversion;
-        float inputMouseY = (_playerControlsLookUp - _playerControlsLookDown) * cameraYInversion;
+        float inputMouseX = (_playerControlsValues.LookLeft - _playerControlsValues.LookRight) * cameraXInversion;
+        float inputMouseY = (_playerControlsValues.LookUp - _playerControlsValues.LookDown) * cameraYInversion;
 
         if (inputMouseX != 0.0f)
         {
