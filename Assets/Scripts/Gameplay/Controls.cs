@@ -182,8 +182,8 @@ public class Controls : MonoBehaviour
 
     void UpdateCameraRotation()
     {
-        float inputMouseX = (_playerControlsValues.LookLeft - _playerControlsValues.LookRight) * cameraXInversion;
-        float inputMouseY = (_playerControlsValues.LookUp - _playerControlsValues.LookDown) * cameraYInversion;
+        float inputMouseX = (_playerControlsValues.LookLeft - _playerControlsValues.LookRight) * cameraXInversion * -1;
+        float inputMouseY = (_playerControlsValues.LookUp - _playerControlsValues.LookDown) * cameraYInversion * -1;
 
         if (inputMouseX != 0.0f)
         {
