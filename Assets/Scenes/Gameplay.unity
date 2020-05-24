@@ -501,6 +501,11 @@ PrefabInstance:
       propertyPath: cameraRotator
       value: 
       objectReference: {fileID: 1986629182}
+    - target: {fileID: 4576736927228494184, guid: b1c2df20f48e6c40387bd46b04bbd184,
+        type: 3}
+      propertyPath: neck
+      value: 
+      objectReference: {fileID: 4576736928257767421}
     - target: {fileID: 5522038674873220015, guid: b1c2df20f48e6c40387bd46b04bbd184,
         type: 3}
       propertyPath: m_Name
@@ -563,3 +568,9 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: b1c2df20f48e6c40387bd46b04bbd184, type: 3}
+--- !u!1 &4576736928257767421 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 6934789481323740995, guid: b1c2df20f48e6c40387bd46b04bbd184,
+    type: 3}
+  m_PrefabInstance: {fileID: 4576736928257767420}
+  m_PrefabAsset: {fileID: 0}

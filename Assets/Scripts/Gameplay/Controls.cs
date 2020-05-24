@@ -13,6 +13,8 @@ public class Controls : MonoBehaviour
     [SerializeField]
     GameObject cameraRotator;
     [SerializeField]
+    GameObject neck;
+    [SerializeField]
     float cameraSpeed = 10.0f;
     [SerializeField]
     sbyte cameraXInversion = 1;
@@ -28,6 +30,15 @@ public class Controls : MonoBehaviour
     float rotationSpeed = 12.0f;
     [SerializeField]
     float walkSpeed = 3.0f;
+    [SerializeField]
+    [Range(0.0f, 360.0f)]
+    float neckMaxXRotation = 42.0f;
+    [SerializeField]
+    [Range(0.0f, 360.0f)]
+    float neckMaxYRotation = 70.0f;
+    [SerializeField]
+    [Range(0.0f, 360.0f)]
+    float neckResetYAngle = 140.0f;
 
     struct PlayerControlsValues {
         public float MoveUp;
@@ -113,6 +124,7 @@ public class Controls : MonoBehaviour
     void LateUpdate()
     {
         UpdateRotatorPosition();
+        UpdateNeckRotation();
     }
 
     void OnEnable()
@@ -217,5 +229,59 @@ public class Controls : MonoBehaviour
     void UpdateRotatorPosition()
     {
         cameraRotator.transform.position = transform.position;
+    }
+
+    void UpdateNeckRotation()
+    {
+        float angleXDiff = Mathf.DeltaAngle(cameraRotator.transform.eulerAngles.x, transform.eulerAngles.x);
+        float angleYDiff = Mathf.DeltaAngle(cameraRotator.transform.eulerAngles.y, transform.eulerAngles.y);
+        float angleXDiffAbs = Mathf.Abs(angleXDiff);
+        float angleYDiffAbs = Mathf.Abs(angleYDiff);
+        float angleX, angleY;
+
+        if (angleXDiffAbs <= neckMaxXRotation)
+        {
+            angleX = cameraRotator.transform.eulerAngles.x;
+        }
+        else
+        {
+            if (angleXDiff < 0.0f)
+            {
+                angleX = transform.eulerAngles.x + neckMaxXRotation;
+            }
+            else
+            {
+                angleX = transform.eulerAngles.x - neckMaxXRotation;
+            }
+        }
+
+        if (angleYDiffAbs <= neckMaxYRotation)
+        {
+            angleY = cameraRotator.transform.eulerAngles.y;
+        }
+        else
+        {
+            if (angleYDiffAbs >= neckResetYAngle)
+            {
+                angleY = transform.eulerAngles.y;
+            }
+            else
+            {
+                if (angleYDiff < 0.0f)
+                {
+                    angleY = transform.eulerAngles.y + neckMaxYRotation;
+                }
+                else
+                {
+                    angleY = transform.eulerAngles.y - neckMaxYRotation;
+                }
+            }
+        }
+
+        neck.transform.rotation = Quaternion.Euler(
+            angleX,
+            angleY,
+            neck.transform.eulerAngles.z
+        );
     }
 }
