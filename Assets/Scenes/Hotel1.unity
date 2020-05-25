@@ -1642,6 +1642,11 @@ PrefabInstance:
       propertyPath: neck
       value: 
       objectReference: {fileID: 1853168489}
+    - target: {fileID: 4576736927228494184, guid: b1c2df20f48e6c40387bd46b04bbd184,
+        type: 3}
+      propertyPath: playerCamera
+      value: 
+      objectReference: {fileID: 1963571665}
     - target: {fileID: 5522038674873220015, guid: b1c2df20f48e6c40387bd46b04bbd184,
         type: 3}
       propertyPath: m_Name
@@ -1820,6 +1825,12 @@ PrefabInstance:
 --- !u!1 &1963571664 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 3511639355427521508, guid: 40b854c28aea68ddea91eac3026764e2,
+    type: 3}
+  m_PrefabInstance: {fileID: 1963571663}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &1963571665 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 3511639355806089686, guid: 40b854c28aea68ddea91eac3026764e2,
     type: 3}
   m_PrefabInstance: {fileID: 1963571663}
   m_PrefabAsset: {fileID: 0}
