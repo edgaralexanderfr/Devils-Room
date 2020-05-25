@@ -13,6 +13,8 @@ public class Controls : MonoBehaviour
     [SerializeField]
     GameObject cameraRotator;
     [SerializeField]
+    GameObject playerCamera;
+    [SerializeField]
     GameObject neck;
     [SerializeField]
     float cameraSpeed = 10.0f;
@@ -26,6 +28,8 @@ public class Controls : MonoBehaviour
     [SerializeField]
     [Range(0.0f, 360.0f)]
     float cameraMaxXRotation = 60.0f;
+    [SerializeField]
+    float cameraZSpeed = 1.5f;
     [SerializeField]
     float rotationSpeed = 12.0f;
     [SerializeField]
@@ -80,6 +84,8 @@ public class Controls : MonoBehaviour
     bool _playingWalkAnimation = false;
     PlayerControls _playerControls;
     PlayerControlsValues _playerControlsValues;
+    Vector3 _playerCameraInitialLocalPosition;
+    RaycastHit _hit;
 
     void Awake()
     {
@@ -140,6 +146,7 @@ public class Controls : MonoBehaviour
     void Start()
     {
         _animator = GetComponent<Animator>();
+        _playerCameraInitialLocalPosition = playerCamera.transform.localPosition;
     }
 
     // Update is called once per frame
@@ -148,6 +155,7 @@ public class Controls : MonoBehaviour
         UpdateControls();
         UpdateAnimations();
         UpdateCameraRotation();
+        UpdateCameraPosition();
     }
 
     void LateUpdate()
@@ -251,6 +259,33 @@ public class Controls : MonoBehaviour
                 rotationX,
                 cameraRotator.transform.eulerAngles.y,
                 0.0f
+            );
+        }
+    }
+
+    void UpdateCameraPosition()
+    {
+        bool collided = Physics.Linecast(
+            cameraRotator.transform.position,
+            playerCamera.transform.position,
+            out _hit,
+            ~LayerMask.GetMask("Player")
+        );
+
+        if (collided)
+        {
+            playerCamera.transform.localPosition = new Vector3(
+                _playerCameraInitialLocalPosition.x,
+                _playerCameraInitialLocalPosition.y,
+                -Vector3.Distance(cameraRotator.transform.position, _hit.point)
+            );
+        }
+        else
+        {
+            playerCamera.transform.localPosition = Vector3.Lerp(
+                playerCamera.transform.localPosition,
+                _playerCameraInitialLocalPosition,
+                Time.deltaTime * cameraZSpeed
             );
         }
     }
