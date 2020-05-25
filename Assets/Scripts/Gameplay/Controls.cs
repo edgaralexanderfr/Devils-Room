@@ -96,6 +96,32 @@ public class Controls : MonoBehaviour
         _playerControls.Gameplay.LookLeft.performed += ctx => _playerControlsValues.LookLeft = ctx.ReadValue<float>();
         _playerControls.Gameplay.LookRight.performed += ctx => _playerControlsValues.LookRight = ctx.ReadValue<float>();
 
+        _playerControls.Gameplay.LookX.performed += ctx => {
+            float value = Mathf.Clamp(ctx.ReadValue<float>() / 10.0f, -1.0f, 1.0f);
+
+            if (value >= 0.0f)
+            {
+                _playerControlsValues.LookRight = value;
+            }
+            else
+            {
+                _playerControlsValues.LookLeft = Mathf.Abs(value);
+            }
+        };
+
+        _playerControls.Gameplay.LookY.performed += ctx => {
+            float value = Mathf.Clamp(ctx.ReadValue<float>() / 10.0f, -1.0f, 1.0f);
+
+            if (value >= 0.0f)
+            {
+                _playerControlsValues.LookUp = value;
+            }
+            else
+            {
+                _playerControlsValues.LookDown = Mathf.Abs(value);
+            }
+        };
+
         _playerControls.Gameplay.MoveUp.canceled += ctx => _playerControlsValues.MoveUp = 0.0f;
         _playerControls.Gameplay.MoveDown.canceled += ctx => _playerControlsValues.MoveDown = 0.0f;
         _playerControls.Gameplay.MoveLeft.canceled += ctx => _playerControlsValues.MoveLeft = 0.0f;
@@ -105,6 +131,9 @@ public class Controls : MonoBehaviour
         _playerControls.Gameplay.LookDown.canceled += ctx => _playerControlsValues.LookDown = 0.0f;
         _playerControls.Gameplay.LookLeft.canceled += ctx => _playerControlsValues.LookLeft = 0.0f;
         _playerControls.Gameplay.LookRight.canceled += ctx => _playerControlsValues.LookRight = 0.0f;
+
+        _playerControls.Gameplay.LookX.canceled += ctx => _playerControlsValues.LookRight = _playerControlsValues.LookLeft = 0.0f;
+        _playerControls.Gameplay.LookY.canceled += ctx => _playerControlsValues.LookUp = _playerControlsValues.LookDown = 0.0f;
     }
 
     // Start is called before the first frame update

@@ -81,6 +81,22 @@ public class @PlayerControls : IInputActionCollection, IDisposable
                     ""expectedControlType"": ""Button"",
                     ""processors"": """",
                     ""interactions"": """"
+                },
+                {
+                    ""name"": ""LookX"",
+                    ""type"": ""Value"",
+                    ""id"": ""8f629d13-573b-4c6b-8f23-509d5af63f0c"",
+                    ""expectedControlType"": ""Axis"",
+                    ""processors"": """",
+                    ""interactions"": """"
+                },
+                {
+                    ""name"": ""LookY"",
+                    ""type"": ""Value"",
+                    ""id"": ""c9080e2b-ca0b-494e-971f-5b519f289cd3"",
+                    ""expectedControlType"": ""Axis"",
+                    ""processors"": """",
+                    ""interactions"": """"
                 }
             ],
             ""bindings"": [
@@ -174,34 +190,12 @@ public class @PlayerControls : IInputActionCollection, IDisposable
                 },
                 {
                     ""name"": """",
-                    ""id"": ""c29cf8e5-7192-4afd-a1f6-fab054449190"",
-                    ""path"": ""<Keyboard>/upArrow"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": """",
-                    ""action"": ""LookUp"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
                     ""id"": ""3a381fe4-49fc-4f6c-826d-44e924ca7ba1"",
                     ""path"": ""<Gamepad>/rightStick/up"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
                     ""action"": ""LookUp"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
-                    ""id"": ""4b9c6c62-b0db-41f4-83e5-7afd28f4f827"",
-                    ""path"": ""<Keyboard>/downArrow"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": """",
-                    ""action"": ""LookDown"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 },
@@ -218,17 +212,6 @@ public class @PlayerControls : IInputActionCollection, IDisposable
                 },
                 {
                     ""name"": """",
-                    ""id"": ""8f2bf7d7-fefb-4a87-a48d-0290f3483c56"",
-                    ""path"": ""<Keyboard>/leftArrow"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": """",
-                    ""action"": ""LookLeft"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
                     ""id"": ""a2a1f05f-46cd-4897-b6f5-595e90408e38"",
                     ""path"": ""<Gamepad>/rightStick/left"",
                     ""interactions"": """",
@@ -240,8 +223,8 @@ public class @PlayerControls : IInputActionCollection, IDisposable
                 },
                 {
                     ""name"": """",
-                    ""id"": ""3ebc711e-a003-45c6-b189-098b752a1d5c"",
-                    ""path"": ""<Keyboard>/rightArrow"",
+                    ""id"": ""bfbbcdd6-cace-47fd-9900-e7119463a7b4"",
+                    ""path"": ""<Gamepad>/rightStick/right"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
@@ -251,12 +234,23 @@ public class @PlayerControls : IInputActionCollection, IDisposable
                 },
                 {
                     ""name"": """",
-                    ""id"": ""bfbbcdd6-cace-47fd-9900-e7119463a7b4"",
-                    ""path"": ""<Gamepad>/rightStick/right"",
+                    ""id"": ""f191e230-c270-46d1-8473-181d30f93aea"",
+                    ""path"": ""<Mouse>/delta/y"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
-                    ""action"": ""LookRight"",
+                    ""action"": ""LookY"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""27aaf665-2f68-45de-9ba6-e34ab766e520"",
+                    ""path"": ""<Mouse>/delta/x"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""LookX"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -275,6 +269,8 @@ public class @PlayerControls : IInputActionCollection, IDisposable
         m_Gameplay_LookDown = m_Gameplay.FindAction("LookDown", throwIfNotFound: true);
         m_Gameplay_LookLeft = m_Gameplay.FindAction("LookLeft", throwIfNotFound: true);
         m_Gameplay_LookRight = m_Gameplay.FindAction("LookRight", throwIfNotFound: true);
+        m_Gameplay_LookX = m_Gameplay.FindAction("LookX", throwIfNotFound: true);
+        m_Gameplay_LookY = m_Gameplay.FindAction("LookY", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -332,6 +328,8 @@ public class @PlayerControls : IInputActionCollection, IDisposable
     private readonly InputAction m_Gameplay_LookDown;
     private readonly InputAction m_Gameplay_LookLeft;
     private readonly InputAction m_Gameplay_LookRight;
+    private readonly InputAction m_Gameplay_LookX;
+    private readonly InputAction m_Gameplay_LookY;
     public struct GameplayActions
     {
         private @PlayerControls m_Wrapper;
@@ -344,6 +342,8 @@ public class @PlayerControls : IInputActionCollection, IDisposable
         public InputAction @LookDown => m_Wrapper.m_Gameplay_LookDown;
         public InputAction @LookLeft => m_Wrapper.m_Gameplay_LookLeft;
         public InputAction @LookRight => m_Wrapper.m_Gameplay_LookRight;
+        public InputAction @LookX => m_Wrapper.m_Gameplay_LookX;
+        public InputAction @LookY => m_Wrapper.m_Gameplay_LookY;
         public InputActionMap Get() { return m_Wrapper.m_Gameplay; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -377,6 +377,12 @@ public class @PlayerControls : IInputActionCollection, IDisposable
                 @LookRight.started -= m_Wrapper.m_GameplayActionsCallbackInterface.OnLookRight;
                 @LookRight.performed -= m_Wrapper.m_GameplayActionsCallbackInterface.OnLookRight;
                 @LookRight.canceled -= m_Wrapper.m_GameplayActionsCallbackInterface.OnLookRight;
+                @LookX.started -= m_Wrapper.m_GameplayActionsCallbackInterface.OnLookX;
+                @LookX.performed -= m_Wrapper.m_GameplayActionsCallbackInterface.OnLookX;
+                @LookX.canceled -= m_Wrapper.m_GameplayActionsCallbackInterface.OnLookX;
+                @LookY.started -= m_Wrapper.m_GameplayActionsCallbackInterface.OnLookY;
+                @LookY.performed -= m_Wrapper.m_GameplayActionsCallbackInterface.OnLookY;
+                @LookY.canceled -= m_Wrapper.m_GameplayActionsCallbackInterface.OnLookY;
             }
             m_Wrapper.m_GameplayActionsCallbackInterface = instance;
             if (instance != null)
@@ -405,6 +411,12 @@ public class @PlayerControls : IInputActionCollection, IDisposable
                 @LookRight.started += instance.OnLookRight;
                 @LookRight.performed += instance.OnLookRight;
                 @LookRight.canceled += instance.OnLookRight;
+                @LookX.started += instance.OnLookX;
+                @LookX.performed += instance.OnLookX;
+                @LookX.canceled += instance.OnLookX;
+                @LookY.started += instance.OnLookY;
+                @LookY.performed += instance.OnLookY;
+                @LookY.canceled += instance.OnLookY;
             }
         }
     }
@@ -419,5 +431,7 @@ public class @PlayerControls : IInputActionCollection, IDisposable
         void OnLookDown(InputAction.CallbackContext context);
         void OnLookLeft(InputAction.CallbackContext context);
         void OnLookRight(InputAction.CallbackContext context);
+        void OnLookX(InputAction.CallbackContext context);
+        void OnLookY(InputAction.CallbackContext context);
     }
 }
