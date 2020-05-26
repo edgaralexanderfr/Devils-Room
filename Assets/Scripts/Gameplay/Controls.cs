@@ -35,6 +35,8 @@ public class Controls : MonoBehaviour
     [SerializeField]
     float walkSpeed = 3.0f;
     [SerializeField]
+    float runSpeed = 6.0f;
+    [SerializeField]
     [Range(0.0f, 360.0f)]
     float neckMaxXRotation = 42.0f;
     [SerializeField]
@@ -82,10 +84,12 @@ public class Controls : MonoBehaviour
     // Private properties
     Animator _animator;
     bool _playingWalkAnimation = false;
+    bool _playingRunAnimation = false;
     PlayerControls _playerControls;
     PlayerControlsValues _playerControlsValues;
     Vector3 _playerCameraInitialLocalPosition;
     RaycastHit _hit;
+    bool _running = false;
 
     void Awake()
     {
@@ -101,6 +105,8 @@ public class Controls : MonoBehaviour
         _playerControls.Gameplay.LookDown.performed += ctx => _playerControlsValues.LookDown = ctx.ReadValue<float>();
         _playerControls.Gameplay.LookLeft.performed += ctx => _playerControlsValues.LookLeft = ctx.ReadValue<float>();
         _playerControls.Gameplay.LookRight.performed += ctx => _playerControlsValues.LookRight = ctx.ReadValue<float>();
+
+        _playerControls.Gameplay.Run.performed += ctx => _running = !_running;
 
         _playerControls.Gameplay.LookX.performed += ctx => {
             float value = Mathf.Clamp(ctx.ReadValue<float>() / 10.0f, -1.0f, 1.0f);
@@ -195,24 +201,47 @@ public class Controls : MonoBehaviour
         {
             MoveAlong(90.0f);
         }
+
+        if (_playerControlsValues.MoveUp <= 0.5f
+            && _playerControlsValues.MoveDown <= 0.5f
+            && _playerControlsValues.MoveLeft <= 0.5f
+            && _playerControlsValues.MoveRight <= 0.5f
+        )
+        {
+            _running = false;
+        }
     }
 
     void UpdateAnimations()
     {
         if (_playerControlsValues.MoveUp > 0.5f || _playerControlsValues.MoveDown > 0.5f || _playerControlsValues.MoveLeft > 0.5f || _playerControlsValues.MoveRight > 0.5f)
         {
-            if (!_playingWalkAnimation)
+            if (_running)
             {
-                _animator.Play("Walk");
-                _playingWalkAnimation = true;
+                if (!_playingRunAnimation)
+                {
+                    _animator.Play("Run");
+                    _playingWalkAnimation = false;
+                    _playingRunAnimation = true;
+                }
+            }
+            else
+            {
+                if (!_playingWalkAnimation)
+                {
+                    _animator.Play("Walk");
+                    _playingWalkAnimation = true;
+                    _playingRunAnimation = false;
+                }
             }
         }
         else
         {
-            if (_playingWalkAnimation)
+            if (_playingWalkAnimation || _playingRunAnimation)
             {
                 _animator.Play("Idle");
                 _playingWalkAnimation = false;
+                _playingRunAnimation = false;
             }
         }
     }
@@ -226,7 +255,7 @@ public class Controls : MonoBehaviour
         );
 
         transform.rotation = Quaternion.Lerp(transform.rotation, rotation, Time.deltaTime * rotationSpeed);
-        transform.Translate(Vector3.forward * Time.deltaTime * walkSpeed);
+        transform.Translate(Vector3.forward * Time.deltaTime * (_running ? runSpeed : walkSpeed));
     }
 
     void UpdateCameraRotation()
