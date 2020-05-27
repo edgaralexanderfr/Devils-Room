@@ -182,30 +182,30 @@ public class Controls : MonoBehaviour
 
     void UpdateControls()
     {
-        if (_playerControlsValues.MoveUp > 0.5f)
+        if (_playerControlsValues.MoveUp > 0.0f)
         {
-            MoveAlong(0.0f);
+            MoveAlong(0.0f, _playerControlsValues.MoveUp);
         }
 
-        if (_playerControlsValues.MoveDown > 0.5f)
+        if (_playerControlsValues.MoveDown > 0.0f)
         {
-            MoveAlong(-180.0f);
+            MoveAlong(-180.0f, _playerControlsValues.MoveDown);
         }
 
-        if (_playerControlsValues.MoveLeft > 0.5f)
+        if (_playerControlsValues.MoveLeft > 0.0f)
         {
-            MoveAlong(270.0f);
+            MoveAlong(270.0f, _playerControlsValues.MoveLeft);
         }
 
-        if (_playerControlsValues.MoveRight > 0.5f)
+        if (_playerControlsValues.MoveRight > 0.0f)
         {
-            MoveAlong(90.0f);
+            MoveAlong(90.0f, _playerControlsValues.MoveRight);
         }
 
-        if (_playerControlsValues.MoveUp <= 0.5f
-            && _playerControlsValues.MoveDown <= 0.5f
-            && _playerControlsValues.MoveLeft <= 0.5f
-            && _playerControlsValues.MoveRight <= 0.5f
+        if (_playerControlsValues.MoveUp == 0.0f
+            && _playerControlsValues.MoveDown == 0.0f
+            && _playerControlsValues.MoveLeft == 0.0f
+            && _playerControlsValues.MoveRight == 0.0f
         )
         {
             _running = false;
@@ -214,12 +214,13 @@ public class Controls : MonoBehaviour
 
     void UpdateAnimations()
     {
-        if (_playerControlsValues.MoveUp > 0.5f || _playerControlsValues.MoveDown > 0.5f || _playerControlsValues.MoveLeft > 0.5f || _playerControlsValues.MoveRight > 0.5f)
+        if (_playerControlsValues.MoveUp > 0.0f || _playerControlsValues.MoveDown > 0.0f || _playerControlsValues.MoveLeft > 0.0f || _playerControlsValues.MoveRight > 0.0f)
         {
             if (_running)
             {
                 if (!_playingRunAnimation)
                 {
+                    _animator.speed = 1.0f;
                     _animator.Play("Run");
                     _playingWalkAnimation = false;
                     _playingRunAnimation = true;
@@ -227,6 +228,8 @@ public class Controls : MonoBehaviour
             }
             else
             {
+                _animator.speed = Mathf.Max(Mathf.Max(Mathf.Max(_playerControlsValues.MoveUp, _playerControlsValues.MoveDown), _playerControlsValues.MoveLeft), _playerControlsValues.MoveRight);
+
                 if (!_playingWalkAnimation)
                 {
                     _animator.Play("Walk");
@@ -239,6 +242,7 @@ public class Controls : MonoBehaviour
         {
             if (_playingWalkAnimation || _playingRunAnimation)
             {
+                _animator.speed = 1.0f;
                 _animator.Play("Idle");
                 _playingWalkAnimation = false;
                 _playingRunAnimation = false;
@@ -246,7 +250,7 @@ public class Controls : MonoBehaviour
         }
     }
 
-    void MoveAlong(float angle)
+    void MoveAlong(float angle, float speed)
     {
         var rotation = Quaternion.Euler(
             transform.eulerAngles.x,
@@ -254,8 +258,10 @@ public class Controls : MonoBehaviour
             transform.eulerAngles.z
         );
 
+        float localSpeed = (_running) ? 1.0f : speed ;
+
         transform.rotation = Quaternion.Lerp(transform.rotation, rotation, Time.deltaTime * rotationSpeed);
-        transform.Translate(Vector3.forward * Time.deltaTime * (_running ? runSpeed : walkSpeed));
+        transform.Translate(Vector3.forward * Time.deltaTime * localSpeed * (_running ? runSpeed : walkSpeed));
     }
 
     void UpdateCameraRotation()
