@@ -83,6 +83,7 @@ public class Controls : MonoBehaviour
 
     // Private properties
     Animator _animator;
+    Rigidbody _rigidbody;
     bool _playingWalkAnimation = false;
     bool _playingRunAnimation = false;
     PlayerControls _playerControls;
@@ -152,13 +153,13 @@ public class Controls : MonoBehaviour
     void Start()
     {
         _animator = GetComponent<Animator>();
+        _rigidbody = GetComponent<Rigidbody>();
         _playerCameraInitialLocalPosition = playerCamera.transform.localPosition;
     }
 
     // Update is called once per frame
     void Update()
     {
-        UpdateControls();
         UpdateAnimations();
         UpdateCameraRotation();
         UpdateCameraPosition();
@@ -168,6 +169,11 @@ public class Controls : MonoBehaviour
     {
         UpdateRotatorPosition();
         UpdateNeckRotation();
+    }
+
+    void FixedUpdate()
+    {
+        UpdateControls();
     }
 
     void OnEnable()
@@ -260,8 +266,8 @@ public class Controls : MonoBehaviour
 
         float localSpeed = (_running) ? 1.0f : speed ;
 
-        transform.rotation = Quaternion.Lerp(transform.rotation, rotation, Time.deltaTime * rotationSpeed);
-        transform.Translate(Vector3.forward * Time.deltaTime * localSpeed * (_running ? runSpeed : walkSpeed));
+        transform.rotation = Quaternion.Lerp(transform.rotation, rotation, Time.fixedDeltaTime * rotationSpeed);
+        _rigidbody.MovePosition(transform.position + (transform.forward * Time.fixedDeltaTime * localSpeed * (_running ? runSpeed : walkSpeed)));
     }
 
     void UpdateCameraRotation()

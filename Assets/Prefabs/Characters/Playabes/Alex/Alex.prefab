@@ -424,7 +424,7 @@ Rigidbody:
   m_IsKinematic: 0
   m_Interpolate: 0
   m_Constraints: 112
-  m_CollisionDetection: 0
+  m_CollisionDetection: 1
 --- !u!65 &4576736927228494190
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -477,8 +477,10 @@ MonoBehaviour:
   cameraYInversion: 1
   cameraMinXRotation: 300
   cameraMaxXRotation: 60
+  cameraZSpeed: 1.5
   rotationSpeed: 12
   walkSpeed: 3
+  runSpeed: 6
   neckMaxXRotation: 42
   neckMaxYRotation: 70
   neckResetYAngle: 140
