@@ -188,24 +188,9 @@ public class Controls : MonoBehaviour
 
     void UpdateControls()
     {
-        if (_playerControlsValues.MoveUp > 0.0f)
+        if (_playerControlsValues.MoveUp > 0.0f || _playerControlsValues.MoveDown > 0.0f || _playerControlsValues.MoveLeft > 0.0f || _playerControlsValues.MoveRight > 0.0f)
         {
-            MoveAlong(0.0f, _playerControlsValues.MoveUp);
-        }
-
-        if (_playerControlsValues.MoveDown > 0.0f)
-        {
-            MoveAlong(-180.0f, _playerControlsValues.MoveDown);
-        }
-
-        if (_playerControlsValues.MoveLeft > 0.0f)
-        {
-            MoveAlong(270.0f, _playerControlsValues.MoveLeft);
-        }
-
-        if (_playerControlsValues.MoveRight > 0.0f)
-        {
-            MoveAlong(90.0f, _playerControlsValues.MoveRight);
+            MoveAlong();
         }
 
         if (_playerControlsValues.MoveUp == 0.0f
@@ -256,15 +241,19 @@ public class Controls : MonoBehaviour
         }
     }
 
-    void MoveAlong(float angle, float speed)
+    void MoveAlong()
     {
+        float x = _playerControlsValues.MoveRight - _playerControlsValues.MoveLeft;
+        float y = _playerControlsValues.MoveUp - _playerControlsValues.MoveDown;
+        float angle = Utils.Mathf.Vector2Angle(x, y);
+
         var rotation = Quaternion.Euler(
             transform.eulerAngles.x,
             cameraRotator.transform.eulerAngles.y + angle,
             transform.eulerAngles.z
         );
 
-        float localSpeed = (_running) ? 1.0f : speed ;
+        float localSpeed = (_running) ? 1.0f : Mathf.Max(Mathf.Abs(x), Mathf.Abs(y)) ;
 
         transform.rotation = Quaternion.Lerp(transform.rotation, rotation, Time.fixedDeltaTime * rotationSpeed);
         _rigidbody.MovePosition(transform.position + (transform.forward * Time.fixedDeltaTime * localSpeed * (_running ? runSpeed : walkSpeed)));
