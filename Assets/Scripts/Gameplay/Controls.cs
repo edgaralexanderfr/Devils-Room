@@ -205,7 +205,12 @@ public class Controls : MonoBehaviour
 
     void UpdateAnimations()
     {
-        if (_playerControlsValues.MoveUp > 0.0f || _playerControlsValues.MoveDown > 0.0f || _playerControlsValues.MoveLeft > 0.0f || _playerControlsValues.MoveRight > 0.0f)
+        float horizontalMove = _playerControlsValues.MoveRight - _playerControlsValues.MoveLeft;
+        float verticalMove = _playerControlsValues.MoveUp - _playerControlsValues.MoveDown;
+
+        if (horizontalMove != 0.0f || verticalMove != 0.0f
+            && (_playerControlsValues.MoveUp > 0.0f || _playerControlsValues.MoveDown > 0.0f || _playerControlsValues.MoveLeft > 0.0f || _playerControlsValues.MoveRight > 0.0f)
+        )
         {
             if (_running)
             {
@@ -253,7 +258,7 @@ public class Controls : MonoBehaviour
             transform.eulerAngles.z
         );
 
-        float localSpeed = (_running) ? 1.0f : Mathf.Max(Mathf.Abs(x), Mathf.Abs(y)) ;
+        float localSpeed = (_running && (x != 0.0f || y != 0.0f)) ? 1.0f : Mathf.Max(Mathf.Abs(x), Mathf.Abs(y)) ;
 
         transform.rotation = Quaternion.Lerp(transform.rotation, rotation, Time.fixedDeltaTime * rotationSpeed);
         _rigidbody.MovePosition(transform.position + (transform.forward * Time.fixedDeltaTime * localSpeed * (_running ? runSpeed : walkSpeed)));
